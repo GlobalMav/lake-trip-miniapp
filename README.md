@@ -1,42 +1,10 @@
-# Поездка на озеро — mini app
+# Lake Trip Mini App v5
 
-Статическое приложение для GitHub Pages: редактируемая таблица закупок, мобильный карточный интерфейс, итог по цене и синхронизация через Firebase Realtime Database.
+Это компактная мобильная версия.
 
-## Как включить общий режим
+Самый безопасный способ обновления, чтобы не потерять Firebase:
+1. Открой текущий рабочий `index.html` в GitHub.
+2. Перед `</style>` вставь CSS из `compact-mobile-patch.css.txt`.
+3. Commit changes.
 
-В `index.html` найди блок `firebaseConfig` и вставь полный конфиг из Firebase:
-
-Firebase → Project settings → General → Your apps → Web app → SDK setup and configuration → Config.
-
-Минимально важны поля:
-
-- `apiKey`
-- `databaseURL`
-- `projectId`
-
-В проекте уже подставлен `databaseURL` для `poezdkatatavuty228`, но `apiKey` нужно взять из Firebase Web App config.
-
-## Правила Realtime Database для общего редактирования
-
-```json
-{
-  "rules": {
-    "lakeTrip": {
-      ".read": true,
-      ".write": true
-    }
-  }
-}
-```
-
-Такой режим открыт для всех, у кого есть ссылка. Для поездки это удобно, но для публичного долгого проекта правила лучше закрыть.
-
-## Деплой на GitHub Pages
-
-Загрузи в корень репозитория:
-
-- `index.html`
-- `README.md`
-- `.nojekyll`
-
-Затем: Settings → Pages → Deploy from a branch → main → /root.
+Или замени весь `index.html`, но тогда сначала перенеси свой рабочий `firebaseConfig`.

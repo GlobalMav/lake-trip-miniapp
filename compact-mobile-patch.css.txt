@@ -1,0 +1,235 @@
+/* ===== v5: compact mobile layout ===== */
+    @media (max-width: 739px) {
+      :root {
+        --radius: 16px;
+        --shadow: 0 5px 14px rgba(17, 24, 39, .06);
+      }
+
+      .app {
+        width: 100%;
+        padding: 8px 8px calc(74px + var(--safe-bottom));
+      }
+
+      .topbar {
+        margin: -8px -8px 6px;
+        padding: calc(var(--safe-top) + 4px) 8px 8px;
+      }
+
+      .topbar-inner {
+        gap: 7px;
+      }
+
+      .title-row {
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 26px;
+        letter-spacing: -.055em;
+      }
+
+      .status {
+        max-width: 44%;
+        min-height: 28px;
+        padding: 5px 8px;
+        font-size: 12px;
+      }
+
+      .stats {
+        grid-template-columns: 1.2fr .68fr;
+        gap: 7px;
+      }
+
+      .stat {
+        padding: 9px 10px;
+        border-radius: 16px;
+      }
+
+      .stat-label {
+        margin-bottom: 2px;
+        font-size: 10px;
+      }
+
+      .stat-value {
+        font-size: 26px;
+        line-height: .95;
+      }
+
+      .stat-value.small {
+        font-size: 22px;
+      }
+
+      .setup {
+        margin: 6px 0 8px;
+        padding: 9px 10px;
+        border-radius: 14px;
+        font-size: 12px;
+      }
+
+      .list {
+        gap: 6px;
+      }
+
+      .row {
+        grid-template-columns: 24px minmax(0, 1fr) 78px 30px;
+        grid-template-rows: 35px 29px;
+        grid-template-areas:
+          "num product price delete"
+          "num qty     price delete";
+        gap: 5px 6px;
+        align-items: center;
+        padding: 8px;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+
+      .row-num {
+        position: static;
+        grid-area: num;
+        align-self: start;
+        justify-self: center;
+        width: 23px;
+        height: 23px;
+        margin-top: 6px;
+        font-size: 11px;
+      }
+
+      .field {
+        gap: 0;
+      }
+
+      .field.product,
+      .field.qty {
+        padding-left: 0;
+      }
+
+      .label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .cell {
+        border-radius: 11px;
+        padding: 7px 9px;
+      }
+
+      .cell.product-input {
+        height: 35px;
+        font-size: 15px;
+        font-weight: 820;
+      }
+
+      .cell.qty-input {
+        height: 29px;
+        background: var(--card-2);
+        font-size: 13px;
+        font-weight: 720;
+      }
+
+      .cell.price-input {
+        height: 69px;
+        padding: 6px;
+        text-align: center;
+        font-size: 17px;
+        font-weight: 920;
+      }
+
+      .delete-btn {
+        width: 30px;
+        height: 69px;
+        min-height: 69px;
+        border-radius: 12px;
+        background: #fff1f2;
+        font-size: 21px;
+      }
+
+      .empty {
+        min-height: 120px;
+        border-radius: 16px;
+      }
+
+      .dock {
+        padding: 6px 8px var(--safe-bottom);
+      }
+
+      .dock-inner {
+        gap: 7px;
+        padding: 7px;
+        border-radius: 17px;
+      }
+
+      .dock-total {
+        padding: 3px 5px;
+      }
+
+      .dock-total span {
+        font-size: 10px;
+      }
+
+      .dock-total strong {
+        margin-top: 2px;
+        font-size: 21px;
+      }
+
+      .dock .btn {
+        min-height: 45px;
+        padding-inline: 15px;
+        border-radius: 14px;
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .stats {
+        grid-template-columns: 1fr 72px;
+      }
+
+      .row {
+        grid-template-columns: 22px minmax(0, 1fr) 68px 28px;
+        grid-template-rows: 34px 28px;
+        gap: 4px 5px;
+        padding: 7px;
+      }
+
+      .row-num {
+        width: 21px;
+        height: 21px;
+        font-size: 10px;
+      }
+
+      .cell.product-input {
+        height: 34px;
+        font-size: 14px;
+      }
+
+      .cell.qty-input {
+        height: 28px;
+        font-size: 12px;
+      }
+
+      .cell.price-input,
+      .delete-btn {
+        height: 66px;
+        min-height: 66px;
+      }
+
+      .cell.price-input {
+        font-size: 15px;
+      }
+
+      .delete-btn {
+        width: 28px;
+      }
+
+      .dock-inner {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .dock .btn {
+        width: auto;
+      }
+    }
