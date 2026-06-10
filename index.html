@@ -3,34 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <title>Поездка на озеро — закупки</title>
+  <meta name="theme-color" content="#f3f4f6" />
+  <title>Закупки на озеро</title>
+
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f7fb;
+      --bg: #f3f4f6;
       --card: #ffffff;
+      --card-2: #f9fafb;
       --text: #111827;
       --muted: #6b7280;
       --line: #e5e7eb;
-      --line-strong: #d1d5db;
+      --line-2: #d1d5db;
       --accent: #111827;
+      --accent-soft: #eef2ff;
       --danger: #dc2626;
-      --ok: #047857;
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --danger-soft: #fef2f2;
+      --ok: #059669;
+      --warn: #d97706;
       --radius: 18px;
+      --shadow: 0 8px 22px rgba(17, 24, 39, .07);
+      --safe-top: max(10px, env(safe-area-inset-top));
+      --safe-bottom: max(10px, env(safe-area-inset-bottom));
     }
 
     * { box-sizing: border-box; }
 
+    html, body { min-height: 100%; }
+
     body {
       margin: 0;
-      min-height: 100dvh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(17, 24, 39, 0.10), transparent 32rem),
-        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     button,
@@ -38,465 +46,617 @@
       font: inherit;
     }
 
-    .page {
-      width: min(1120px, 100%);
-      margin: 0 auto;
-      padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+    button {
+      border: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .hero {
+    input {
+      min-width: 0;
+      border: 1px solid var(--line);
+      outline: 0;
+      background: #fff;
+      color: var(--text);
+      transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17, 24, 39, .08);
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    .app {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      padding: var(--safe-top) 12px calc(88px + var(--safe-bottom));
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0 -12px 10px;
+      padding: var(--safe-top) 12px 10px;
+      background: linear-gradient(180deg, rgba(243, 244, 246, .98) 0%, rgba(243, 244, 246, .92) 78%, rgba(243, 244, 246, 0) 100%);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
       display: grid;
-      gap: 14px;
-      margin: 8px 0 18px;
+      gap: 8px;
+      width: min(860px, 100%);
+      margin: 0 auto;
     }
 
     .title-row {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
       gap: 12px;
-      flex-wrap: wrap;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(26px, 6vw, 46px);
+      font-size: 26px;
       line-height: 1;
-      letter-spacing: -0.05em;
+      letter-spacing: -.045em;
     }
 
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.5;
-      max-width: 690px;
-    }
-
-    .sync-status {
+    .status {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 11px;
+      gap: 7px;
+      min-height: 30px;
+      max-width: 52%;
+      padding: 6px 9px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, .82);
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 750;
       white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .status span:last-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .dot {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
-      background: var(--line-strong);
+      border-radius: 999px;
+      background: var(--line-2);
       flex: 0 0 auto;
     }
 
-    .dot.ok { background: var(--ok); }
-    .dot.warn { background: #d97706; }
-    .dot.err { background: var(--danger); }
+    .dot.ok { background: var(--ok); box-shadow: 0 0 0 4px rgba(5, 150, 105, .12); }
+    .dot.warn { background: var(--warn); box-shadow: 0 0 0 4px rgba(217, 119, 6, .12); }
+    .dot.err { background: var(--danger); box-shadow: 0 0 0 4px rgba(220, 38, 38, .12); }
 
-    .panel {
-      background: rgba(255, 255, 255, 0.86);
-      border: 1px solid rgba(229, 231, 235, 0.9);
+    .stats {
+      display: grid;
+      grid-template-columns: 1.35fr .75fr;
+      gap: 8px;
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 6px 18px rgba(17, 24, 39, .05);
+    }
+
+    .stat-label {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      display: block;
       overflow: hidden;
-      backdrop-filter: blur(10px);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 28px;
+      line-height: .98;
+      font-weight: 950;
+      letter-spacing: -.06em;
+      font-variant-numeric: tabular-nums;
     }
 
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px;
-      border-bottom: 1px solid var(--line);
-      flex-wrap: wrap;
+    .stat-value.small {
+      font-size: 24px;
     }
 
-    .left-actions,
-    .right-actions {
-      display: flex;
+    .setup {
+      margin: 8px 0 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(217, 119, 6, .25);
+      border-radius: 16px;
+      background: #fffbeb;
+      color: #78350f;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .setup[hidden] { display: none; }
+
+    .setup b {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .row {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 94px 34px;
+      grid-template-areas:
+        "product price delete"
+        "qty     price delete";
+      gap: 6px 8px;
       align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .row-num {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card-2);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .field {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .field.product { grid-area: product; padding-left: 28px; }
+    .field.qty { grid-area: qty; padding-left: 28px; }
+    .field.price { grid-area: price; }
+    .delete-wrap { grid-area: delete; align-self: stretch; }
+
+    .label {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .cell {
+      width: 100%;
+      height: 36px;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 15px;
+      font-weight: 720;
+    }
+
+    .cell.product-input {
+      height: 38px;
+      font-size: 16px;
+      font-weight: 860;
+      letter-spacing: -.015em;
+    }
+
+    .cell.qty-input {
+      height: 34px;
+      background: var(--card-2);
+      font-size: 14px;
+    }
+
+    .cell.price-input {
+      height: 58px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: 920;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .delete-btn {
+      width: 34px;
+      height: 100%;
+      min-height: 58px;
+      border-radius: 13px;
+      background: var(--danger-soft);
+      color: var(--danger);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 650;
+    }
+
+    .delete-btn:active,
+    .btn:active {
+      transform: translateY(1px) scale(.99);
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 140px;
+      border: 1px dashed var(--line-2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .65);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 720;
+    }
+
+    .empty[hidden] { display: none; }
+
+    .desktop-actions {
+      display: none;
+      gap: 8px;
+      margin: 12px 0 0;
     }
 
     .btn {
-      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 44px;
+      padding: 10px 14px;
       border-radius: 14px;
-      padding: 11px 14px;
       background: var(--accent);
       color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      min-height: 44px;
-      transition: transform .12s ease, opacity .12s ease;
+      font-weight: 850;
+      box-shadow: 0 10px 20px rgba(17, 24, 39, .12);
     }
 
-    .btn:active { transform: translateY(1px) scale(0.99); }
     .btn.secondary {
       background: #fff;
       color: var(--text);
-      border: 1px solid var(--line-strong);
-      font-weight: 650;
+      border: 1px solid var(--line-2);
+      box-shadow: none;
     }
 
     .btn.danger {
       background: #fff;
       color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.22);
+      border: 1px solid rgba(220, 38, 38, .22);
+      box-shadow: none;
     }
 
-    .total-pill {
-      display: inline-flex;
-      align-items: baseline;
+    .dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      padding: 8px 12px var(--safe-bottom);
+      background: linear-gradient(180deg, transparent 0%, rgba(243, 244, 246, .9) 30%, rgba(243, 244, 246, .98) 100%);
+      backdrop-filter: blur(14px);
+    }
+
+    .dock-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
-      padding: 10px 14px;
-      border-radius: 16px;
-      background: #f3f4f6;
+      width: min(860px, 100%);
+      margin: 0 auto;
+      padding: 8px;
       border: 1px solid var(--line);
-      font-weight: 800;
+      border-radius: 19px;
+      background: rgba(255, 255, 255, .95);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, .12);
     }
 
-    .total-pill span:first-child { color: var(--muted); font-weight: 650; }
-    .total-pill span:last-child { font-size: 20px; letter-spacing: -0.03em; }
-
-    .table-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+    .dock-total {
+      min-width: 0;
+      padding: 4px 6px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-    }
-
-    th,
-    td {
-      padding: 11px 12px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: middle;
-    }
-
-    th {
-      text-align: left;
+    .dock-total span {
+      display: block;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-      background: rgba(249, 250, 251, 0.92);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    tr:last-child td { border-bottom: 0; }
-
-    .col-product { width: 42%; }
-    .col-qty { width: 27%; }
-    .col-price { width: 18%; }
-    .col-actions { width: 1%; white-space: nowrap; text-align: right; }
-
-    input.cell {
-      width: 100%;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      padding: 10px 11px;
-      background: transparent;
-      color: var(--text);
-      outline: none;
-      min-height: 42px;
-    }
-
-    input.cell:hover { background: #f9fafb; border-color: var(--line); }
-    input.cell:focus { background: #fff; border-color: #9ca3af; box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08); }
-    input.price { text-align: right; font-variant-numeric: tabular-nums; }
-
-    .delete-row {
-      min-width: 42px;
-      min-height: 42px;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 20px;
+      font-size: 11px;
       line-height: 1;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .045em;
     }
 
-    .delete-row:hover { background: rgba(220, 38, 38, 0.07); border-color: rgba(220, 38, 38, 0.12); }
-
-    .empty {
-      padding: 42px 18px;
-      text-align: center;
-      color: var(--muted);
+    .dock-total strong {
+      display: block;
+      margin-top: 3px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 23px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.055em;
+      font-variant-numeric: tabular-nums;
     }
 
-    .footnote {
-      margin: 12px 4px 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
+    .dock .btn {
+      min-height: 48px;
+      border-radius: 15px;
+      padding-inline: 18px;
     }
 
-    @media (max-width: 680px) {
-      .page { padding-left: 12px; padding-right: 12px; }
-      .title-row { align-items: flex-start; }
-      .sync-status { width: 100%; justify-content: center; }
-      .toolbar { align-items: stretch; }
-      .left-actions,
-      .right-actions,
-      .btn,
-      .total-pill { width: 100%; justify-content: center; }
-      .table-wrap { overflow: visible; }
-      table { min-width: 0; border-collapse: separate; border-spacing: 0 10px; padding: 0 10px 10px; }
-      thead { display: none; }
-      tbody { display: block; }
-      tr {
-        display: grid;
-        gap: 9px;
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: #fff;
-        margin-top: 10px;
-      }
-      td {
-        display: grid;
+    @media (max-width: 370px) {
+      .app { padding-inline: 8px; }
+      .topbar { margin-inline: -8px; padding-inline: 8px; }
+      h1 { font-size: 23px; }
+      .status { max-width: 48%; }
+      .stats { grid-template-columns: 1fr; }
+      .row {
+        grid-template-columns: minmax(0, 1fr) 82px 32px;
         gap: 6px;
+        padding: 8px;
+      }
+      .cell.product-input { font-size: 15px; }
+      .cell.price-input { font-size: 16px; }
+      .dock-inner { grid-template-columns: 1fr; }
+      .dock .btn { width: 100%; }
+    }
+
+    @media (min-width: 740px) {
+      .app {
+        padding: 24px 18px 32px;
+      }
+
+      .topbar {
+        position: static;
+        margin: 0 0 14px;
         padding: 0;
+        background: transparent;
+        backdrop-filter: none;
+      }
+
+      .topbar-inner {
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .status {
+        max-width: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr .42fr;
+      }
+
+      .list {
+        gap: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+
+      .row {
+        grid-template-columns: 56px minmax(0, 1.5fr) minmax(140px, .7fr) 130px 48px;
+        grid-template-areas: "num product qty price delete";
+        gap: 10px;
+        padding: 9px 12px;
         border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid var(--line);
       }
-      td::before {
-        content: attr(data-label);
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
+
+      .row:last-child { border-bottom: 0; }
+
+      .row-num {
+        position: static;
+        grid-area: num;
+        width: 34px;
+        height: 34px;
+        justify-self: center;
       }
-      td.col-actions { text-align: left; }
-      td.col-actions::before { content: ''; display: none; }
-      input.cell { border-color: var(--line); background: #f9fafb; }
-      input.price { text-align: left; }
-      .delete-row { width: 100%; border-color: rgba(220, 38, 38, 0.18); background: rgba(220, 38, 38, 0.04); font-size: 16px; }
-      .delete-row::after { content: ' Удалить строку'; font-size: 14px; font-weight: 700; }
+
+      .field.product,
+      .field.qty {
+        padding-left: 0;
+      }
+
+      .field.price {
+        align-self: end;
+      }
+
+      .label {
+        font-size: 10px;
+      }
+
+      .cell,
+      .cell.product-input,
+      .cell.qty-input,
+      .cell.price-input {
+        height: 40px;
+        font-size: 15px;
+      }
+
+      .cell.price-input {
+        text-align: right;
+      }
+
+      .delete-btn {
+        min-height: 40px;
+        height: 40px;
+      }
+
+      .dock { display: none; }
+
+      .desktop-actions {
+        display: flex;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main class="page">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="title-row">
-        <h1 id="page-title">Закупки на озеро</h1>
-        <div class="sync-status" id="syncStatus" aria-live="polite"><span class="dot warn"></span><span>Загрузка…</span></div>
-      </div>
-      <p class="subtitle">Редактируйте прямо в таблице. Новые строки сохраняются автоматически. На телефоне таблица превращается в карточки.</p>
-    </section>
-
-    <section class="panel" aria-label="Таблица закупок">
-      <div class="toolbar">
-        <div class="left-actions">
-          <button class="btn" id="addRow" type="button">+ Добавить строку</button>
-          <button class="btn secondary" id="exportJson" type="button">Экспорт JSON</button>
+  <main class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="title-row">
+          <h1>Закупки</h1>
+          <div class="status" id="syncStatus" aria-live="polite">
+            <span class="dot warn"></span>
+            <span>Загрузка…</span>
+          </div>
         </div>
-        <div class="right-actions">
-          <div class="total-pill"><span>Итого</span><span id="total">0</span></div>
-        </div>
-      </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="col-product">Продукт</th>
-              <th class="col-qty">Кол-во</th>
-              <th class="col-price">Цена</th>
-              <th class="col-actions" aria-label="Действия"></th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-        <div class="empty" id="emptyState" hidden>Пока строк нет. Нажмите «Добавить строку».</div>
+        <section class="stats" aria-label="Итоги">
+          <div class="stat">
+            <span class="stat-label">Итого</span>
+            <strong class="stat-value" id="totalTop">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Позиций</span>
+            <strong class="stat-value small" id="countTop">0</strong>
+          </div>
+        </section>
       </div>
-    </section>
+    </header>
 
-    <p class="footnote">Firebase необязателен для запуска, но нужен, чтобы все участники видели и редактировали один общий список. Без Firebase данные сохраняются только в браузере текущего устройства.</p>
+    <div class="setup" id="setupHelp" hidden>
+      <b>Firebase не подключён</b>
+      Сейчас изменения сохраняются только на этом устройстве. Вставь полный <code>firebaseConfig</code> в начало файла.
+    </div>
+
+    <section class="list" id="rows" aria-label="Список закупок"></section>
+    <div class="empty" id="emptyState" hidden>Пока строк нет.<br />Нажми «Добавить».</div>
+
+    <div class="desktop-actions">
+      <button class="btn" id="addRow" type="button">+ Добавить строку</button>
+      <button class="btn secondary" id="exportJson" type="button">Скачать JSON</button>
+      <button class="btn danger" id="resetRows" type="button">Сбросить</button>
+    </div>
   </main>
 
+  <div class="dock">
+    <div class="dock-inner">
+      <div class="dock-total">
+        <span>Итого</span>
+        <strong id="totalDock">0</strong>
+      </div>
+      <button class="btn" id="addRowDock" type="button">+ Добавить</button>
+    </div>
+  </div>
+
   <script type="module">
-    // 1) Вставьте сюда конфиг из Firebase Console → Project settings → Your apps → Web app.
-    // 2) Если оставить поля пустыми, приложение будет работать локально через localStorage.
-    const firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      databaseURL: "",
-      projectId: "",
-      storageBucket: "",
-      messagingSenderId: "",
-      appId: ""
-    };
+    // ВАЖНО: перед загрузкой на GitHub вставь сюда свой ПОЛНЫЙ firebaseConfig
+    // из Firebase Console → Project settings → General → Your apps → Web app.
+    //
+    // Если у тебя в старом index.html Firebase уже работал — просто скопируй оттуда
+    // весь объект firebaseConfig целиком и замени этот блок.
+  const firebaseConfig = {
+    apiKey: "AIzaSyC7zbRXoEv1-mbUT5_l8jdj2WVdf7_yATI",
+    authDomain: "poezdkatavatuy228.firebaseapp.com",
+    databaseURL: "https://poezdkatavatuy228-default-rtdb.firebaseio.com",
+    projectId: "poezdkatavatuy228",
+    storageBucket: "poezdkatavatuy228.firebasestorage.app",
+    messagingSenderId: "11229388151",
+    appId: "1:11229388151:web:4180a1d2c07480749d5572",
+    measurementId: "G-7P7FSNT06X"
+};
 
     const DB_PATH = "lakeTrip/items";
-    const LOCAL_STORAGE_KEY = "lake-trip-items-v1";
+    const LOCAL_STORAGE_KEY = "lake-trip-items-v4";
+
     const initialRows = [
-  {
-    "id": "-OtnRrkH_d6lyziH8WQY",
-    "product": "Свинина",
-    "qty": "12 кг",
-    "price": 6300
-  },
-  {
-    "id": "-OtnRzmo7gYRzlOIhwy5",
-    "product": "куриная грудка",
-    "qty": "4 кг",
-    "price": 1700
-  },
-  {
-    "id": "-OtnT4OUYZV3MUHTqPlb",
-    "product": "Вода",
-    "qty": "5 л",
-    "price": 100
-  },
-  {
-    "id": "-OtnTwnq5bjc5zgBqAdx",
-    "product": "Газированная вода",
-    "qty": "6 л",
-    "price": 400
-  },
-  {
-    "id": "-OtnU1tG1VcleB9elYYZ",
-    "product": "полисорб",
-    "qty": "банка",
-    "price": 600
-  },
-  {
-    "id": "-OtnVUFbPnTM1amdJcng",
-    "product": "Кепчук",
-    "qty": "2",
-    "price": 200
-  },
-  {
-    "id": "-OtnVgM5g7xtJdjK88DF",
-    "product": "грибочки",
-    "qty": "1-1,5 кг",
-    "price": 500
-  },
-  {
-    "id": "-OtnWEtU06DfqODVDEro",
-    "product": "Салфетки влажные большая",
-    "qty": "2",
-    "price": 400
-  },
-  {
-    "id": "-OuBZziz75juBalyEPRC",
-    "product": "Картошка",
-    "qty": "Бейби картофель 4 кг",
-    "price": 450
-  },
-  {
-    "id": "-OuM4_DsKFBGnWMOtSNo",
-    "product": "Огурцы, лук, помидоры",
-    "qty": "",
-    "price": 800
-  },
-  {
-    "id": "-OumMdBDTilcy39ET25g",
-    "product": "Маринад",
-    "qty": "",
-    "price": 300
-  },
-  {
-    "id": "-OumMrcM5iGA-Dy6YQW-",
-    "product": "Столовые приборы",
-    "qty": "на всех",
-    "price": 400
-  },
-  {
-    "id": "-OumNXu2OFEOJ0HSPLWU",
-    "product": "Анти комариные пидорасы",
-    "qty": "Спреи",
-    "price": 600
-  },
-  {
-    "id": "-OumPkOQXrrSOi_NnhQg",
-    "product": "Уголь",
-    "qty": "",
-    "price": 1500
-  },
-  {
-    "id": "-OumPxqZIkMN78g17iv4",
-    "product": "Снеки",
-    "qty": "",
-    "price": 500
-  },
-  {
-    "id": "-OumQC0HSZAPNvDWosgJ",
-    "product": "Перекись, бинты",
-    "qty": "",
-    "price": 300
-  },
-  {
-    "id": "-OumTQwn1CT-pNGFOZ4L",
-    "product": "Тунец",
-    "qty": "3",
-    "price": 350
-  },
-  {
-    "id": "-OumTVGgbwOGNUQ-uIO5",
-    "product": "Яйца",
-    "qty": "20 шт",
-    "price": 220
-  },
-  {
-    "id": "-OumTivGLvHiOGE0-UfT",
-    "product": "Дошираки",
-    "qty": "7",
-    "price": 435
-  },
-  {
-    "id": "-OumU3JzD69XZvpk-uvE",
-    "product": "Хлеб",
-    "qty": "2",
-    "price": 100
-  },
-  {
-    "id": "-OumUFavvktb_S1G7wxi",
-    "product": "Лаваш",
-    "qty": "2",
-    "price": 100
-  },
-  {
-    "id": "-OumUZ1CYxni2PScxMwH",
-    "product": "Бумаж полотенце",
-    "qty": "2",
-    "price": 300
-  }
-];
+      { id: "-OtnRrkH_d6lyziH8WQY", product: "Свинина", qty: "12 кг", price: "6300" },
+      { id: "-OtnRzmo7gYRzlOIhwy5", product: "куриная грудка", qty: "4 кг", price: "1700" },
+      { id: "-OtnT4OUYZV3MUHTqPlb", product: "Вода", qty: "5 л", price: "100" },
+      { id: "-OtnTwnq5bjc5zgBqAdx", product: "Газированная вода", qty: "6 л", price: "400" },
+      { id: "-OtnU1tG1VcleB9elYYZ", product: "полисорб", qty: "банка", price: "600" },
+      { id: "-OtnVUFbPnTM1amdJcng", product: "Кепчук", qty: "2", price: "200" },
+      { id: "-OtnVgM5g7xtJdjK88DF", product: "грибочки", qty: "1-1,5 кг", price: "500" },
+      { id: "-OtnWEtU06DfqODVDEro", product: "Салфетки влажные большая", qty: "2", price: "400" },
+      { id: "-OuBZziz75juBalyEPRC", product: "Картошка", qty: "Бейби картофель 4 кг", price: "450" },
+      { id: "-OuM4_DsKFBGnWMOtSNo", product: "Огурцы, лук, помидоры", qty: "", price: "800" },
+      { id: "-OumMdBDTilcy39ET25g", product: "Маринад", qty: "", price: "300" },
+      { id: "-OumMrcM5iGA-Dy6YQW-", product: "Столовые приборы", qty: "на всех", price: "400" },
+      { id: "-OumNXu2OFEOJ0HSPLWU", product: "Анти комариные пидорасы", qty: "Спреи", price: "600" },
+      { id: "-OumPkOQXrrSOi_NnhQg", product: "Уголь", qty: "", price: "1500" },
+      { id: "-OumPxqZIkMN78g17iv4", product: "Снеки", qty: "", price: "500" },
+      { id: "-OumQC0HSZAPNvDWosgJ", product: "Перекись, бинты", qty: "", price: "300" },
+      { id: "-OumTQwn1CT-pNGFOZ4L", product: "Тунец", qty: "3", price: "350" },
+      { id: "-OumTVGgbwOGNUQ-uIO5", product: "Яйца", qty: "20 шт", price: "220" },
+      { id: "-OumTivGLvHiOGE0-UfT", product: "Дошираки", qty: "7", price: "435" },
+      { id: "-OumU3JzD69XZvpk-uvE", product: "Хлеб", qty: "2", price: "100" },
+      { id: "-OumUFavvktb_S1G7wxi", product: "Лаваш", qty: "2", price: "100" },
+      { id: "-OumUZ1CYxni2PScxMwH", product: "Бумаж полотенце", qty: "2", price: "300" }
+    ];
 
     let rows = [];
+    let saveTimer = null;
     let saveMode = "local";
     let firebaseSet = null;
     let firebaseRef = null;
-    let saveTimer = null;
     let remoteReady = false;
+    let unsubscribeFirebase = null;
 
     const rowsEl = document.querySelector("#rows");
     const emptyStateEl = document.querySelector("#emptyState");
-    const totalEl = document.querySelector("#total");
     const syncStatusEl = document.querySelector("#syncStatus");
+    const setupHelpEl = document.querySelector("#setupHelp");
+    const totalTopEl = document.querySelector("#totalTop");
+    const totalDockEl = document.querySelector("#totalDock");
+    const countTopEl = document.querySelector("#countTop");
     const addRowBtn = document.querySelector("#addRow");
+    const addRowDockBtn = document.querySelector("#addRowDock");
     const exportJsonBtn = document.querySelector("#exportJson");
+    const resetRowsBtn = document.querySelector("#resetRows");
 
-    function hasFirebaseConfig() {
-      return Boolean(firebaseConfig.apiKey && firebaseConfig.databaseURL && firebaseConfig.projectId && firebaseConfig.appId);
+    function isPlaceholder(value) {
+      const text = String(value || "").trim();
+      return !text || text.startsWith("PASTE_");
     }
 
-    function setStatus(text, kind = "warn") {
-      const dotClass = kind === "ok" ? "ok" : kind === "err" ? "err" : "warn";
-      syncStatusEl.innerHTML = `<span class="dot ${dotClass}"></span><span>${escapeHtml(text)}</span>`;
+    function hasFirebaseConfig() {
+      return !["apiKey", "databaseURL", "projectId"].some((key) => isPlaceholder(firebaseConfig[key]));
+    }
+
+    function makeId() {
+      return globalThis.crypto?.randomUUID?.() || `row-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
     function escapeHtml(value) {
@@ -508,26 +668,24 @@
         .replaceAll("'", "&#039;");
     }
 
-    function makeId() {
-      return globalThis.crypto?.randomUUID?.() || `row-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    }
-
     function normalizeRow(row = {}) {
       return {
-        id: row.id || makeId(),
+        id: String(row.id || makeId()),
         product: String(row.product ?? ""),
         qty: String(row.qty ?? ""),
-        price: row.price === "" || row.price === null || row.price === undefined ? "" : String(row.price)
+        price: row.price === null || row.price === undefined ? "" : String(row.price)
       };
     }
 
-    function normalizeRows(nextRows) {
-      return Array.isArray(nextRows) ? nextRows.map(normalizeRow) : [];
+    function normalizeRows(value) {
+      if (Array.isArray(value)) return value.map(normalizeRow);
+      if (value && typeof value === "object") return Object.values(value).map(normalizeRow);
+      return [];
     }
 
     function parsePrice(value) {
-      if (value === "" || value === null || value === undefined) return 0;
-      const number = Number(String(value).replace(",", "."));
+      const cleaned = String(value ?? "").replace(/\s/g, "").replace(",", ".");
+      const number = Number(cleaned);
       return Number.isFinite(number) ? number : 0;
     }
 
@@ -539,49 +697,85 @@
       return rows.reduce((sum, row) => sum + parsePrice(row.price), 0);
     }
 
+    function setStatus(text, kind = "warn") {
+      const dotClass = kind === "ok" ? "ok" : kind === "err" ? "err" : "warn";
+      syncStatusEl.innerHTML = `<span class="dot ${dotClass}"></span><span>${escapeHtml(text)}</span>`;
+    }
+
+    function updateSummary() {
+      totalTopEl.textContent = formatMoney(calculateTotal());
+      totalDockEl.textContent = formatMoney(calculateTotal());
+      countTopEl.textContent = rows.length;
+    }
+
     function render() {
+      const active = document.activeElement;
+      const activeRowId = active?.closest?.(".row[data-id]")?.dataset?.id;
+      const activeField = active?.dataset?.field;
+      const selectionStart = active?.selectionStart;
+      const selectionEnd = active?.selectionEnd;
+
       rowsEl.innerHTML = "";
       emptyStateEl.hidden = rows.length > 0;
 
       const fragment = document.createDocumentFragment();
 
       rows.forEach((row, index) => {
-        const tr = document.createElement("tr");
-        tr.dataset.id = row.id;
-        tr.innerHTML = `
-          <td class="col-product" data-label="Продукт">
-            <input class="cell" data-field="product" aria-label="Продукт, строка ${index + 1}" value="${escapeHtml(row.product)}" placeholder="Например: Хлеб" />
-          </td>
-          <td class="col-qty" data-label="Кол-во">
-            <input class="cell" data-field="qty" aria-label="Количество, строка ${index + 1}" value="${escapeHtml(row.qty)}" placeholder="Например: 2 шт" />
-          </td>
-          <td class="col-price" data-label="Цена">
-            <input class="cell price" data-field="price" inputmode="decimal" aria-label="Цена, строка ${index + 1}" value="${escapeHtml(row.price)}" placeholder="0" />
-          </td>
-          <td class="col-actions">
-            <button class="delete-row" type="button" aria-label="Удалить строку">×</button>
-          </td>
+        const card = document.createElement("article");
+        card.className = "row";
+        card.dataset.id = row.id;
+        card.innerHTML = `
+          <div class="row-num">${index + 1}</div>
+
+          <label class="field product">
+            <span class="label">Продукт</span>
+            <input class="cell product-input" data-field="product" value="${escapeHtml(row.product)}" placeholder="Название" autocomplete="off" aria-label="Продукт, строка ${index + 1}" />
+          </label>
+
+          <label class="field qty">
+            <span class="label">Кол-во</span>
+            <input class="cell qty-input" data-field="qty" value="${escapeHtml(row.qty)}" placeholder="Кол-во" autocomplete="off" aria-label="Количество, строка ${index + 1}" />
+          </label>
+
+          <label class="field price">
+            <span class="label">Цена</span>
+            <input class="cell price-input" data-field="price" value="${escapeHtml(row.price)}" placeholder="0" inputmode="decimal" autocomplete="off" aria-label="Цена, строка ${index + 1}" />
+          </label>
+
+          <div class="delete-wrap">
+            <button class="delete-btn" type="button" aria-label="Удалить строку">×</button>
+          </div>
         `;
-        fragment.appendChild(tr);
+
+        fragment.appendChild(card);
       });
 
       rowsEl.appendChild(fragment);
-      totalEl.textContent = formatMoney(calculateTotal());
+      updateSummary();
+
+      if (activeRowId && activeField) {
+        const nextActive = rowsEl.querySelector(`.row[data-id="${CSS.escape(activeRowId)}"] input[data-field="${CSS.escape(activeField)}"]`);
+        if (nextActive) {
+          nextActive.focus({ preventScroll: true });
+          if (typeof selectionStart === "number" && typeof selectionEnd === "number") {
+            nextActive.setSelectionRange(selectionStart, selectionEnd);
+          }
+        }
+      }
     }
 
     function readLocalRows() {
       try {
         const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
         return raw ? normalizeRows(JSON.parse(raw)) : normalizeRows(initialRows);
-      } catch (error) {
-        console.warn("Не удалось прочитать localStorage", error);
+      } catch {
         return normalizeRows(initialRows);
       }
     }
 
-    function writeLocalRows() {
+    function writeLocalRows(statusText = "Локально") {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
-      setStatus("Сохранено локально", "warn");
+      setStatus(statusText, "warn");
     }
 
     function persistRows() {
@@ -590,57 +784,83 @@
         try {
           if (saveMode === "firebase" && firebaseSet && firebaseRef && remoteReady) {
             await firebaseSet(firebaseRef, rows);
-            setStatus("Синхронизировано", "ok");
+            setStatus("Онлайн", "ok");
           } else {
             writeLocalRows();
           }
         } catch (error) {
           console.error(error);
-          writeLocalRows();
-          setStatus("Firebase недоступен, сохранено локально", "err");
+          saveMode = "local";
+          setupHelpEl.hidden = false;
+          writeLocalRows("Firebase недоступен");
         }
-      }, 250);
+      }, 180);
+    }
+
+    function addRow() {
+      rows.push(normalizeRow({ product: "", qty: "", price: "" }));
+      render();
+      persistRows();
+
+      requestAnimationFrame(() => {
+        const lastInput = rowsEl.querySelector(".row:last-child input[data-field='product']");
+        lastInput?.focus();
+        lastInput?.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
     }
 
     rowsEl.addEventListener("input", (event) => {
       const input = event.target.closest("input[data-field]");
       if (!input) return;
 
-      const tr = input.closest("tr[data-id]");
-      const row = rows.find((item) => item.id === tr.dataset.id);
+      const rowEl = input.closest(".row[data-id]");
+      const row = rows.find((item) => item.id === rowEl.dataset.id);
       if (!row) return;
 
       const field = input.dataset.field;
-      row[field] = field === "price" ? input.value.replace(/[^0-9.,-]/g, "") : input.value;
-      totalEl.textContent = formatMoney(calculateTotal());
+      row[field] = field === "price" ? input.value.replace(/[^0-9.,\s-]/g, "") : input.value;
+
+      if (field === "price" && row[field] !== input.value) {
+        input.value = row[field];
+      }
+
+      updateSummary();
       persistRows();
     });
 
     rowsEl.addEventListener("click", (event) => {
-      const button = event.target.closest(".delete-row");
+      const button = event.target.closest(".delete-btn");
       if (!button) return;
-      const tr = button.closest("tr[data-id]");
-      rows = rows.filter((item) => item.id !== tr.dataset.id);
+
+      const rowEl = button.closest(".row[data-id]");
+      const row = rows.find((item) => item.id === rowEl.dataset.id);
+      const label = row?.product?.trim() || "строку";
+
+      if (!confirm(`Удалить «${label}»?`)) return;
+
+      rows = rows.filter((item) => item.id !== rowEl.dataset.id);
       render();
       persistRows();
     });
 
-    addRowBtn.addEventListener("click", () => {
-      rows.push(normalizeRow({ product: "", qty: "", price: "" }));
-      render();
-      persistRows();
-      const lastInput = rowsEl.querySelector("tr:last-child input[data-field='product']");
-      lastInput?.focus();
-    });
+    addRowBtn?.addEventListener("click", addRow);
+    addRowDockBtn.addEventListener("click", addRow);
 
-    exportJsonBtn.addEventListener("click", () => {
+    exportJsonBtn?.addEventListener("click", () => {
       const blob = new Blob([JSON.stringify(rows, null, 2)], { type: "application/json;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "lake-trip-items.json";
-      a.click();
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "lake-trip-items.json";
+      link.click();
       URL.revokeObjectURL(url);
+    });
+
+    resetRowsBtn?.addEventListener("click", () => {
+      if (!confirm("Сбросить список к начальному варианту?")) return;
+      rows = normalizeRows(initialRows);
+      render();
+      persistRows();
     });
 
     async function initFirebaseMode() {
@@ -656,25 +876,34 @@
       saveMode = "firebase";
 
       const snapshot = await databaseModule.get(firebaseRef);
+
       if (!snapshot.exists()) {
         rows = normalizeRows(initialRows);
         await firebaseSet(firebaseRef, rows);
+      } else {
+        rows = normalizeRows(snapshot.val());
+        render();
       }
 
-      databaseModule.onValue(firebaseRef, (snapshot) => {
+      unsubscribeFirebase = databaseModule.onValue(firebaseRef, (snapshot) => {
         remoteReady = true;
         const nextRows = normalizeRows(snapshot.val() || []);
+
         if (JSON.stringify(nextRows) !== JSON.stringify(rows)) {
           rows = nextRows;
           render();
         }
-        setStatus("Синхронизировано", "ok");
+
+        setupHelpEl.hidden = true;
+        setStatus("Онлайн", "ok");
       }, (error) => {
         console.error(error);
+        if (unsubscribeFirebase) unsubscribeFirebase();
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Ошибка Firebase, локальный режим", "err");
+        setupHelpEl.hidden = false;
+        setStatus("Нет доступа", "err");
       });
     }
 
@@ -686,19 +915,21 @@
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Локальный режим", "warn");
+        setupHelpEl.hidden = false;
+        setStatus("Локально", "warn");
         return;
       }
 
       try {
-        setStatus("Подключение к Firebase…", "warn");
+        setStatus("Подключение…", "warn");
         await initFirebaseMode();
       } catch (error) {
         console.error(error);
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Firebase не подключился, локальный режим", "err");
+        setupHelpEl.hidden = false;
+        setStatus("Локально", "warn");
       }
     }
 
