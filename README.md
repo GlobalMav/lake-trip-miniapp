@@ -1,22 +1,22 @@
-# Закупки на озеро — Firebase mini app
+# Поездка на озеро — mini app
 
-Статическое приложение для общей таблицы закупок: редактирование строк, добавление строк и итог по цене.
+Статическое приложение для GitHub Pages: редактируемая таблица закупок, мобильный карточный интерфейс, итог по цене и синхронизация через Firebase Realtime Database.
 
-## 1. Вставить Firebase config
+## Как включить общий режим
 
-Откройте `index.html` и замените пустой объект `firebaseConfig` на конфиг из Firebase Console:
+В `index.html` найди блок `firebaseConfig` и вставь полный конфиг из Firebase:
 
-Firebase Console → Project settings → General → Your apps → Web app → SDK setup and configuration → Config.
+Firebase → Project settings → General → Your apps → Web app → SDK setup and configuration → Config.
 
-Важно: `databaseURL` для текущей базы:
+Минимально важны поля:
 
-```js
-"https://poezdkatatavuty228-default-rtdb.firebaseio.com"
-```
+- `apiKey`
+- `databaseURL`
+- `projectId`
 
-## 2. Правила Realtime Database
+В проекте уже подставлен `databaseURL` для `poezdkatatavuty228`, но `apiKey` нужно взять из Firebase Web App config.
 
-Firebase Console → Realtime Database → Rules:
+## Правила Realtime Database для общего редактирования
 
 ```json
 {
@@ -29,34 +29,14 @@ Firebase Console → Realtime Database → Rules:
 }
 ```
 
-Такой режим удобен для поездки без логина, но любой человек со ссылкой сможет менять данные.
+Такой режим открыт для всех, у кого есть ссылка. Для поездки это удобно, но для публичного долгого проекта правила лучше закрыть.
 
-## 3. Деплой через Firebase Hosting
+## Деплой на GitHub Pages
 
-Установите Firebase CLI, если он еще не установлен:
+Загрузи в корень репозитория:
 
-```bash
-npm install -g firebase-tools
-```
+- `index.html`
+- `README.md`
+- `.nojekyll`
 
-Войдите в аккаунт:
-
-```bash
-firebase login
-```
-
-Из папки проекта выполните:
-
-```bash
-firebase deploy --only hosting
-```
-
-После деплоя Firebase покажет Hosting URL.
-
-## Если запускаете `firebase init hosting`
-
-- Use an existing project: `poezdkatatavuty228`
-- Public directory: `.`
-- Configure as a single-page app: `Yes`
-- Overwrite `index.html`: `No`
-- Set up automatic builds and deploys with GitHub: по желанию
+Затем: Settings → Pages → Deploy from a branch → main → /root.

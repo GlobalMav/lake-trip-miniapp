@@ -3,108 +3,229 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#0f172a" />
   <title>Поездка на озеро — закупки</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --line-strong: #d1d5db;
-      --accent: #111827;
+      --bg: #eef2f7;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-solid: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --soft: #f8fafc;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --accent: #0f172a;
+      --accent-2: #1e293b;
       --danger: #dc2626;
-      --ok: #047857;
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
+      --danger-soft: #fef2f2;
+      --ok: #059669;
+      --warn: #d97706;
+      --shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --safe-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     * { box-sizing: border-box; }
 
+    html { min-height: 100%; }
+
     body {
       margin: 0;
       min-height: 100dvh;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(17, 24, 39, 0.10), transparent 32rem),
-        var(--bg);
+        radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.18), transparent 34rem),
+        radial-gradient(circle at 100% 0, rgba(16, 185, 129, 0.13), transparent 30rem),
+        linear-gradient(180deg, #f8fafc 0%, var(--bg) 54%, #e5eaf2 100%);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     button,
-    input {
-      font: inherit;
-    }
+    input { font: inherit; }
 
-    .page {
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .app {
       width: min(1120px, 100%);
       margin: 0 auto;
-      padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+      padding: max(18px, env(safe-area-inset-top)) 14px calc(100px + var(--safe-bottom));
     }
 
     .hero {
       display: grid;
       gap: 14px;
-      margin: 8px 0 18px;
+      padding: 8px 2px 16px;
     }
 
-    .title-row {
+    .hero-top {
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      align-items: flex-end;
       gap: 12px;
-      flex-wrap: wrap;
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--ok);
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.13);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(26px, 6vw, 46px);
-      line-height: 1;
-      letter-spacing: -0.05em;
+      font-size: clamp(34px, 12vw, 64px);
+      line-height: .9;
+      letter-spacing: -0.075em;
     }
 
     .subtitle {
       margin: 0;
+      max-width: 760px;
       color: var(--muted);
       font-size: 15px;
-      line-height: 1.5;
-      max-width: 690px;
+      line-height: 1.55;
     }
 
     .sync-status {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      min-height: 38px;
       padding: 8px 11px;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(226, 232, 240, 0.95);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.74);
       color: var(--muted);
       font-size: 13px;
+      font-weight: 750;
+      line-height: 1.15;
       white-space: nowrap;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+      backdrop-filter: blur(12px);
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: var(--line-strong);
       flex: 0 0 auto;
     }
 
-    .dot.ok { background: var(--ok); }
-    .dot.warn { background: #d97706; }
-    .dot.err { background: var(--danger); }
+    .dot.ok { background: var(--ok); box-shadow: 0 0 0 4px rgba(5, 150, 105, .12); }
+    .dot.warn { background: var(--warn); box-shadow: 0 0 0 4px rgba(217, 119, 6, .12); }
+    .dot.err { background: var(--danger); box-shadow: 0 0 0 4px rgba(220, 38, 38, .12); }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .summary-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      min-height: 92px;
+      padding: 18px;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .summary-value {
+      display: block;
+      margin-top: 6px;
+      font-size: clamp(28px, 8vw, 44px);
+      font-weight: 900;
+      line-height: .94;
+      letter-spacing: -0.065em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-note {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 850;
+      letter-spacing: -0.01em;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+      transition: transform .12s ease, opacity .12s ease, background .12s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:active { transform: translateY(1px) scale(.99); }
+    .btn:hover { background: var(--accent-2); }
+
+    .btn.secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover { background: var(--soft); }
+
+    .btn.danger {
+      background: #fff;
+      color: var(--danger);
+      border: 1px solid rgba(220, 38, 38, .22);
+      box-shadow: none;
+    }
 
     .panel {
-      background: rgba(255, 255, 255, 0.86);
-      border: 1px solid rgba(229, 231, 235, 0.9);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
       overflow: hidden;
-      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
 
     .toolbar {
@@ -113,57 +234,23 @@
       justify-content: space-between;
       gap: 12px;
       padding: 14px;
-      border-bottom: 1px solid var(--line);
-      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .58);
     }
 
-    .left-actions,
-    .right-actions {
+    .toolbar-actions {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 11px 14px;
-      background: var(--accent);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      min-height: 44px;
-      transition: transform .12s ease, opacity .12s ease;
+    .toolbar-meta {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
     }
-
-    .btn:active { transform: translateY(1px) scale(0.99); }
-    .btn.secondary {
-      background: #fff;
-      color: var(--text);
-      border: 1px solid var(--line-strong);
-      font-weight: 650;
-    }
-
-    .btn.danger {
-      background: #fff;
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.22);
-    }
-
-    .total-pill {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 16px;
-      background: #f3f4f6;
-      border: 1px solid var(--line);
-      font-weight: 800;
-    }
-
-    .total-pill span:first-child { color: var(--muted); font-weight: 650; }
-    .total-pill span:last-child { font-size: 20px; letter-spacing: -0.03em; }
 
     .table-wrap {
       overflow-x: auto;
@@ -172,145 +259,371 @@
 
     table {
       width: 100%;
+      min-width: 760px;
       border-collapse: collapse;
-      min-width: 720px;
     }
 
     th,
     td {
-      padding: 11px 12px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--line);
       vertical-align: middle;
     }
 
     th {
-      text-align: left;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-      background: rgba(249, 250, 251, 0.92);
       position: sticky;
       top: 0;
       z-index: 1;
+      background: rgba(248, 250, 252, .95);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .045em;
+      text-align: left;
+      text-transform: uppercase;
     }
 
     tr:last-child td { border-bottom: 0; }
 
-    .col-product { width: 42%; }
+    .col-index { width: 52px; color: var(--muted); font-weight: 850; text-align: center; }
+    .col-product { width: 43%; }
     .col-qty { width: 27%; }
     .col-price { width: 18%; }
     .col-actions { width: 1%; white-space: nowrap; text-align: right; }
 
     input.cell {
       width: 100%;
+      min-height: 44px;
       border: 1px solid transparent;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px 11px;
       background: transparent;
       color: var(--text);
       outline: none;
-      min-height: 42px;
+      font-weight: 680;
+      transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
     }
 
-    input.cell:hover { background: #f9fafb; border-color: var(--line); }
-    input.cell:focus { background: #fff; border-color: #9ca3af; box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08); }
+    input.cell::placeholder { color: #94a3b8; font-weight: 600; }
+    input.cell:hover { background: var(--soft); border-color: var(--line); }
+    input.cell:focus { background: #fff; border-color: #94a3b8; box-shadow: 0 0 0 4px rgba(15, 23, 42, .08); }
     input.price { text-align: right; font-variant-numeric: tabular-nums; }
 
     .delete-row {
-      min-width: 42px;
-      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
       border: 1px solid transparent;
-      border-radius: 12px;
+      border-radius: 14px;
       background: transparent;
       color: var(--danger);
       cursor: pointer;
-      font-size: 20px;
+      font-size: 24px;
       line-height: 1;
+      transition: background .12s ease, border-color .12s ease;
+      touch-action: manipulation;
     }
 
-    .delete-row:hover { background: rgba(220, 38, 38, 0.07); border-color: rgba(220, 38, 38, 0.12); }
+    .delete-row:hover { background: var(--danger-soft); border-color: rgba(220, 38, 38, .16); }
 
     .empty {
-      padding: 42px 18px;
+      padding: 52px 18px;
       text-align: center;
       color: var(--muted);
+      font-weight: 720;
     }
 
-    .footnote {
+    .setup-card {
+      margin: 12px 0 0;
+      padding: 14px 16px;
+      border: 1px solid rgba(217, 119, 6, .22);
+      border-radius: 20px;
+      background: rgba(255, 251, 235, .78);
+      color: #78350f;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .setup-card[hidden] { display: none; }
+
+    .setup-card strong { display: block; margin-bottom: 4px; }
+    .setup-card p { margin: 0; color: #92400e; font-size: 14px; line-height: 1.45; }
+    .setup-card code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .72);
+      color: #713f12;
+      font-weight: 800;
+    }
+
+    .bottom-dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      padding: 10px 14px var(--safe-bottom);
+      background: linear-gradient(180deg, transparent 0%, rgba(238, 242, 247, .88) 18%, rgba(238, 242, 247, .98) 100%);
+      backdrop-filter: blur(14px);
+    }
+
+    .dock-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 10px;
+      border: 1px solid rgba(226, 232, 240, .92);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, .16);
+    }
+
+    .dock-total {
+      min-width: 0;
+      padding: 5px 4px 5px 8px;
+    }
+
+    .dock-total span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.1;
+    }
+
+    .dock-total strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 3px;
+      font-size: 25px;
+      font-weight: 950;
+      letter-spacing: -0.055em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dock-inner .btn { min-height: 54px; padding-inline: 18px; border-radius: 18px; }
+
+    .footer-note {
       margin: 12px 4px 0;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.45;
     }
 
-    @media (max-width: 680px) {
-      .page { padding-left: 12px; padding-right: 12px; }
-      .title-row { align-items: flex-start; }
-      .sync-status { width: 100%; justify-content: center; }
-      .toolbar { align-items: stretch; }
-      .left-actions,
-      .right-actions,
-      .btn,
-      .total-pill { width: 100%; justify-content: center; }
-      .table-wrap { overflow: visible; }
-      table { min-width: 0; border-collapse: separate; border-spacing: 0 10px; padding: 0 10px 10px; }
-      thead { display: none; }
-      tbody { display: block; }
-      tr {
-        display: grid;
-        gap: 9px;
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: #fff;
-        margin-top: 10px;
+    @media (min-width: 761px) {
+      .bottom-dock { display: none; }
+      .app { padding-bottom: 34px; }
+    }
+
+    @media (max-width: 760px) {
+      .app { padding-inline: 10px; }
+      .hero { padding-bottom: 10px; }
+      .hero-top { display: grid; gap: 12px; }
+      .sync-status { width: fit-content; max-width: 100%; white-space: normal; }
+      .subtitle { font-size: 14px; }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
       }
+
+      .summary-card {
+        min-height: auto;
+        padding: 15px;
+        border-radius: 22px;
+      }
+
+      .summary-card.compact {
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+
+      .summary-value { font-size: 34px; }
+      .toolbar { display: none; }
+      .panel { border-radius: 22px; background: transparent; border: 0; box-shadow: none; overflow: visible; }
+      .table-wrap { overflow: visible; }
+
+      table {
+        display: block;
+        min-width: 0;
+        width: 100%;
+        border-collapse: separate;
+      }
+
+      thead { display: none; }
+      tbody {
+        display: grid;
+        gap: 10px;
+      }
+
+      tr {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid rgba(226, 232, 240, .95);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, .92);
+        box-shadow: 0 10px 26px rgba(15, 23, 42, .07);
+      }
+
       td {
         display: grid;
         gap: 6px;
         padding: 0;
         border: 0;
       }
+
       td::before {
         content: attr(data-label);
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .055em;
+        text-transform: uppercase;
       }
-      td.col-actions { text-align: left; }
-      td.col-actions::before { content: ''; display: none; }
-      input.cell { border-color: var(--line); background: #f9fafb; }
-      input.price { text-align: left; }
-      .delete-row { width: 100%; border-color: rgba(220, 38, 38, 0.18); background: rgba(220, 38, 38, 0.04); font-size: 16px; }
-      .delete-row::after { content: ' Удалить строку'; font-size: 14px; font-weight: 700; }
+
+      td.col-index {
+        position: absolute;
+        top: 13px;
+        left: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border-radius: 999px;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        font-size: 12px;
+      }
+
+      td.col-index::before { content: ""; display: none; }
+
+      td.col-product {
+        grid-column: 1 / -1;
+        padding: 28px 44px 0 0;
+      }
+
+      td.col-product input {
+        min-height: 54px;
+        font-size: 18px;
+        font-weight: 850;
+      }
+
+      td.col-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: block;
+        width: auto;
+      }
+
+      td.col-actions::before { content: ""; display: none; }
+
+      input.cell {
+        min-height: 50px;
+        border-color: var(--line);
+        background: var(--soft);
+        padding: 12px 12px;
+        border-radius: 16px;
+      }
+
+      input.price {
+        text-align: left;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .delete-row {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        background: var(--danger-soft);
+        border-color: rgba(220, 38, 38, .13);
+        font-size: 22px;
+      }
+
+      .empty {
+        margin-top: 10px;
+        border: 1px dashed var(--line-strong);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, .72);
+      }
+
+      .setup-card { border-radius: 20px; }
+      .footer-note { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .app { padding-inline: 8px; }
+      h1 { font-size: 36px; }
+      tr { padding: 12px; }
+      td.col-product { padding-right: 40px; }
+      .dock-inner { grid-template-columns: 1fr; }
+      .dock-inner .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <main class="page">
+  <main class="app">
     <section class="hero" aria-labelledby="page-title">
-      <div class="title-row">
-        <h1 id="page-title">Закупки на озеро</h1>
-        <div class="sync-status" id="syncStatus" aria-live="polite"><span class="dot warn"></span><span>Загрузка…</span></div>
+      <div class="hero-top">
+        <div>
+          <div class="kicker">Общая таблица</div>
+          <h1 id="page-title">Закупки</h1>
+        </div>
+        <div class="sync-status" id="syncStatus" aria-live="polite">
+          <span class="dot warn"></span><span>Загрузка…</span>
+        </div>
       </div>
-      <p class="subtitle">Редактируйте прямо в таблице. Новые строки сохраняются автоматически. На телефоне таблица превращается в карточки.</p>
+      <p class="subtitle">Редактируйте прямо в строках. На телефоне список превращается в крупные карточки, а кнопка добавления и итог всегда под рукой снизу.</p>
     </section>
+
+    <section class="summary-grid" aria-label="Итоги">
+      <div class="summary-card">
+        <div>
+          <span class="summary-label">Итого по цене</span>
+          <strong class="summary-value" id="totalTop">0</strong>
+          <p class="summary-note">Сумма пересчитывается сразу после изменения цены.</p>
+        </div>
+      </div>
+      <div class="summary-card compact">
+        <div>
+          <span class="summary-label">Позиций</span>
+          <strong class="summary-value" id="countTop">0</strong>
+          <p class="summary-note" id="modeNote">Проверяю подключение…</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="setup-card" id="setupHelp" hidden>
+      <strong>Firebase ещё не подключён</strong>
+      <p>Сайт открыт, но общая синхронизация не включится, пока в начале файла <code>index.html</code> не вставлен полный <code>firebaseConfig</code>. Особенно нужны <code>apiKey</code>, <code>databaseURL</code> и <code>projectId</code>.</p>
+    </div>
 
     <section class="panel" aria-label="Таблица закупок">
       <div class="toolbar">
-        <div class="left-actions">
+        <div class="toolbar-actions">
           <button class="btn" id="addRow" type="button">+ Добавить строку</button>
-          <button class="btn secondary" id="exportJson" type="button">Экспорт JSON</button>
+          <button class="btn secondary" id="exportJson" type="button">Скачать JSON</button>
+          <button class="btn danger" id="resetRows" type="button">Сбросить список</button>
         </div>
-        <div class="right-actions">
-          <div class="total-pill"><span>Итого</span><span id="total">0</span></div>
-        </div>
+        <div class="toolbar-meta"><span id="totalDesktop">0</span> · <span id="countDesktop">0 позиций</span></div>
       </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
+              <th class="col-index">№</th>
               <th class="col-product">Продукт</th>
               <th class="col-qty">Кол-во</th>
               <th class="col-price">Цена</th>
@@ -323,180 +636,90 @@
       </div>
     </section>
 
-    <p class="footnote">Firebase необязателен для запуска, но нужен, чтобы все участники видели и редактировали один общий список. Без Firebase данные сохраняются только в браузере текущего устройства.</p>
+    <p class="footer-note">Если Firebase настроен, все участники видят один общий список. Если конфиг не заполнен или доступ к базе закрыт правилами, изменения сохраняются только в браузере текущего устройства.</p>
   </main>
 
+  <div class="bottom-dock" aria-label="Быстрые действия">
+    <div class="dock-inner">
+      <div class="dock-total">
+        <span>Итого</span>
+        <strong id="totalDock">0</strong>
+      </div>
+      <button class="btn" id="addRowDock" type="button">+ Строка</button>
+    </div>
+  </div>
+
   <script type="module">
-    // 1) Вставьте сюда конфиг из Firebase Console → Project settings → Your apps → Web app.
-    // 2) Если оставить поля пустыми, приложение будет работать локально через localStorage.
+    // Вставь полный объект из Firebase Console → Project settings → General → Your apps → Web app.
+    // databaseURL и projectId я заранее подставил по твоему проекту. Остались apiKey/appId/messagingSenderId из Web app config.
     const firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      databaseURL: "",
-      projectId: "",
-      storageBucket: "",
-      messagingSenderId: "",
-      appId: ""
+      apiKey: "AIzaSyC7zbRXoEv1-mbUT5_l8jdj2WVdf7_yATI",
+      authDomain: "poezdkatavatuy228.firebaseapp.com",
+      databaseURL: "https://poezdkatavatuy228-default-rtdb.firebaseio.com",
+      projectId: "poezdkatavatuy228",
+      storageBucket: "poezdkatavatuy228.firebasestorage.app",
+      messagingSenderId: "11229388151",
+      appId: "1:11229388151:web:4180a1d2c07480749d5572",
+      measurementId: "G-7P7FSNT06X"
     };
 
     const DB_PATH = "lakeTrip/items";
-    const LOCAL_STORAGE_KEY = "lake-trip-items-v1";
+    const LOCAL_STORAGE_KEY = "lake-trip-items-v2";
+
     const initialRows = [
-  {
-    "id": "-OtnRrkH_d6lyziH8WQY",
-    "product": "Свинина",
-    "qty": "12 кг",
-    "price": 6300
-  },
-  {
-    "id": "-OtnRzmo7gYRzlOIhwy5",
-    "product": "куриная грудка",
-    "qty": "4 кг",
-    "price": 1700
-  },
-  {
-    "id": "-OtnT4OUYZV3MUHTqPlb",
-    "product": "Вода",
-    "qty": "5 л",
-    "price": 100
-  },
-  {
-    "id": "-OtnTwnq5bjc5zgBqAdx",
-    "product": "Газированная вода",
-    "qty": "6 л",
-    "price": 400
-  },
-  {
-    "id": "-OtnU1tG1VcleB9elYYZ",
-    "product": "полисорб",
-    "qty": "банка",
-    "price": 600
-  },
-  {
-    "id": "-OtnVUFbPnTM1amdJcng",
-    "product": "Кепчук",
-    "qty": "2",
-    "price": 200
-  },
-  {
-    "id": "-OtnVgM5g7xtJdjK88DF",
-    "product": "грибочки",
-    "qty": "1-1,5 кг",
-    "price": 500
-  },
-  {
-    "id": "-OtnWEtU06DfqODVDEro",
-    "product": "Салфетки влажные большая",
-    "qty": "2",
-    "price": 400
-  },
-  {
-    "id": "-OuBZziz75juBalyEPRC",
-    "product": "Картошка",
-    "qty": "Бейби картофель 4 кг",
-    "price": 450
-  },
-  {
-    "id": "-OuM4_DsKFBGnWMOtSNo",
-    "product": "Огурцы, лук, помидоры",
-    "qty": "",
-    "price": 800
-  },
-  {
-    "id": "-OumMdBDTilcy39ET25g",
-    "product": "Маринад",
-    "qty": "",
-    "price": 300
-  },
-  {
-    "id": "-OumMrcM5iGA-Dy6YQW-",
-    "product": "Столовые приборы",
-    "qty": "на всех",
-    "price": 400
-  },
-  {
-    "id": "-OumNXu2OFEOJ0HSPLWU",
-    "product": "Анти комариные пидорасы",
-    "qty": "Спреи",
-    "price": 600
-  },
-  {
-    "id": "-OumPkOQXrrSOi_NnhQg",
-    "product": "Уголь",
-    "qty": "",
-    "price": 1500
-  },
-  {
-    "id": "-OumPxqZIkMN78g17iv4",
-    "product": "Снеки",
-    "qty": "",
-    "price": 500
-  },
-  {
-    "id": "-OumQC0HSZAPNvDWosgJ",
-    "product": "Перекись, бинты",
-    "qty": "",
-    "price": 300
-  },
-  {
-    "id": "-OumTQwn1CT-pNGFOZ4L",
-    "product": "Тунец",
-    "qty": "3",
-    "price": 350
-  },
-  {
-    "id": "-OumTVGgbwOGNUQ-uIO5",
-    "product": "Яйца",
-    "qty": "20 шт",
-    "price": 220
-  },
-  {
-    "id": "-OumTivGLvHiOGE0-UfT",
-    "product": "Дошираки",
-    "qty": "7",
-    "price": 435
-  },
-  {
-    "id": "-OumU3JzD69XZvpk-uvE",
-    "product": "Хлеб",
-    "qty": "2",
-    "price": 100
-  },
-  {
-    "id": "-OumUFavvktb_S1G7wxi",
-    "product": "Лаваш",
-    "qty": "2",
-    "price": 100
-  },
-  {
-    "id": "-OumUZ1CYxni2PScxMwH",
-    "product": "Бумаж полотенце",
-    "qty": "2",
-    "price": 300
-  }
-];
+      { id: "-OtnRrkH_d6lyziH8WQY", product: "Свинина", qty: "12 кг", price: 6300 },
+      { id: "-OtnRzmo7gYRzlOIhwy5", product: "куриная грудка", qty: "4 кг", price: 1700 },
+      { id: "-OtnT4OUYZV3MUHTqPlb", product: "Вода", qty: "5 л", price: 100 },
+      { id: "-OtnTwnq5bjc5zgBqAdx", product: "Газированная вода", qty: "6 л", price: 400 },
+      { id: "-OtnU1tG1VcleB9elYYZ", product: "полисорб", qty: "банка", price: 600 },
+      { id: "-OtnVUFbPnTM1amdJcng", product: "Кепчук", qty: "2", price: 200 },
+      { id: "-OtnVgM5g7xtJdjK88DF", product: "грибочки", qty: "1-1,5 кг", price: 500 },
+      { id: "-OtnWEtU06DfqODVDEro", product: "Салфетки влажные большая", qty: "2", price: 400 },
+      { id: "-OuBZziz75juBalyEPRC", product: "Картошка", qty: "Бейби картофель 4 кг", price: 450 },
+      { id: "-OuM4_DsKFBGnWMOtSNo", product: "Огурцы, лук, помидоры", qty: "", price: 800 },
+      { id: "-OumMdBDTilcy39ET25g", product: "Маринад", qty: "", price: 300 },
+      { id: "-OumMrcM5iGA-Dy6YQW-", product: "Столовые приборы", qty: "на всех", price: 400 },
+      { id: "-OumNXu2OFEOJ0HSPLWU", product: "Анти комариные пидорасы", qty: "Спреи", price: 600 },
+      { id: "-OumPkOQXrrSOi_NnhQg", product: "Уголь", qty: "", price: 1500 },
+      { id: "-OumPxqZIkMN78g17iv4", product: "Снеки", qty: "", price: 500 },
+      { id: "-OumQC0HSZAPNvDWosgJ", product: "Перекись, бинты", qty: "", price: 300 },
+      { id: "-OumTQwn1CT-pNGFOZ4L", product: "Тунец", qty: "3", price: 350 },
+      { id: "-OumTVGgbwOGNUQ-uIO5", product: "Яйца", qty: "20 шт", price: 220 },
+      { id: "-OumTivGLvHiOGE0-UfT", product: "Дошираки", qty: "7", price: 435 },
+      { id: "-OumU3JzD69XZvpk-uvE", product: "Хлеб", qty: "2", price: 100 },
+      { id: "-OumUFavvktb_S1G7wxi", product: "Лаваш", qty: "2", price: 100 },
+      { id: "-OumUZ1CYxni2PScxMwH", product: "Бумаж полотенце", qty: "2", price: 300 }
+    ];
 
     let rows = [];
     let saveMode = "local";
     let firebaseSet = null;
     let firebaseRef = null;
-    let saveTimer = null;
     let remoteReady = false;
+    let saveTimer = null;
+    let unsubscribeFirebase = null;
 
     const rowsEl = document.querySelector("#rows");
     const emptyStateEl = document.querySelector("#emptyState");
-    const totalEl = document.querySelector("#total");
     const syncStatusEl = document.querySelector("#syncStatus");
+    const setupHelpEl = document.querySelector("#setupHelp");
+    const modeNoteEl = document.querySelector("#modeNote");
     const addRowBtn = document.querySelector("#addRow");
+    const addRowDockBtn = document.querySelector("#addRowDock");
     const exportJsonBtn = document.querySelector("#exportJson");
+    const resetRowsBtn = document.querySelector("#resetRows");
+    const totalTopEl = document.querySelector("#totalTop");
+    const totalDockEl = document.querySelector("#totalDock");
+    const totalDesktopEl = document.querySelector("#totalDesktop");
+    const countTopEl = document.querySelector("#countTop");
+    const countDesktopEl = document.querySelector("#countDesktop");
 
-    function hasFirebaseConfig() {
-      return Boolean(firebaseConfig.apiKey && firebaseConfig.databaseURL && firebaseConfig.projectId && firebaseConfig.appId);
+    function getMissingFirebaseFields() {
+      return ["apiKey", "databaseURL", "projectId"].filter((field) => !String(firebaseConfig[field] || "").trim());
     }
 
-    function setStatus(text, kind = "warn") {
-      const dotClass = kind === "ok" ? "ok" : kind === "err" ? "err" : "warn";
-      syncStatusEl.innerHTML = `<span class="dot ${dotClass}"></span><span>${escapeHtml(text)}</span>`;
+    function hasFirebaseConfig() {
+      return getMissingFirebaseFields().length === 0;
     }
 
     function escapeHtml(value) {
@@ -514,20 +737,23 @@
 
     function normalizeRow(row = {}) {
       return {
-        id: row.id || makeId(),
+        id: String(row.id || makeId()),
         product: String(row.product ?? ""),
         qty: String(row.qty ?? ""),
         price: row.price === "" || row.price === null || row.price === undefined ? "" : String(row.price)
       };
     }
 
-    function normalizeRows(nextRows) {
-      return Array.isArray(nextRows) ? nextRows.map(normalizeRow) : [];
+    function normalizeRows(value) {
+      if (Array.isArray(value)) return value.map(normalizeRow).filter(Boolean);
+      if (value && typeof value === "object") return Object.values(value).map(normalizeRow).filter(Boolean);
+      return [];
     }
 
     function parsePrice(value) {
       if (value === "" || value === null || value === undefined) return 0;
-      const number = Number(String(value).replace(",", "."));
+      const cleaned = String(value).replace(/\s/g, "").replace(",", ".");
+      const number = Number(cleaned);
       return Number.isFinite(number) ? number : 0;
     }
 
@@ -539,24 +765,53 @@
       return rows.reduce((sum, row) => sum + parsePrice(row.price), 0);
     }
 
+    function formatCount(count) {
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      if (mod10 === 1 && mod100 !== 11) return `${count} позиция`;
+      if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return `${count} позиции`;
+      return `${count} позиций`;
+    }
+
+    function setStatus(text, kind = "warn") {
+      const dotClass = kind === "ok" ? "ok" : kind === "err" ? "err" : "warn";
+      syncStatusEl.innerHTML = `<span class="dot ${dotClass}"></span><span>${escapeHtml(text)}</span>`;
+    }
+
+    function updateSummary() {
+      const total = formatMoney(calculateTotal());
+      const count = rows.length;
+      totalTopEl.textContent = total;
+      totalDockEl.textContent = total;
+      totalDesktopEl.textContent = `Итого ${total}`;
+      countTopEl.textContent = count;
+      countDesktopEl.textContent = formatCount(count);
+    }
+
     function render() {
+      const active = document.activeElement;
+      const activeRowId = active?.closest?.("tr[data-id]")?.dataset?.id;
+      const activeField = active?.dataset?.field;
+      const activeSelectionStart = active?.selectionStart;
+      const activeSelectionEnd = active?.selectionEnd;
+
       rowsEl.innerHTML = "";
       emptyStateEl.hidden = rows.length > 0;
 
       const fragment = document.createDocumentFragment();
-
       rows.forEach((row, index) => {
         const tr = document.createElement("tr");
         tr.dataset.id = row.id;
         tr.innerHTML = `
+          <td class="col-index" data-label="№">${index + 1}</td>
           <td class="col-product" data-label="Продукт">
-            <input class="cell" data-field="product" aria-label="Продукт, строка ${index + 1}" value="${escapeHtml(row.product)}" placeholder="Например: Хлеб" />
+            <input class="cell" data-field="product" aria-label="Продукт, строка ${index + 1}" value="${escapeHtml(row.product)}" placeholder="Например: Хлеб" autocomplete="off" />
           </td>
           <td class="col-qty" data-label="Кол-во">
-            <input class="cell" data-field="qty" aria-label="Количество, строка ${index + 1}" value="${escapeHtml(row.qty)}" placeholder="Например: 2 шт" />
+            <input class="cell" data-field="qty" aria-label="Количество, строка ${index + 1}" value="${escapeHtml(row.qty)}" placeholder="Например: 2 шт" autocomplete="off" />
           </td>
           <td class="col-price" data-label="Цена">
-            <input class="cell price" data-field="price" inputmode="decimal" aria-label="Цена, строка ${index + 1}" value="${escapeHtml(row.price)}" placeholder="0" />
+            <input class="cell price" data-field="price" inputmode="decimal" aria-label="Цена, строка ${index + 1}" value="${escapeHtml(row.price)}" placeholder="0" autocomplete="off" />
           </td>
           <td class="col-actions">
             <button class="delete-row" type="button" aria-label="Удалить строку">×</button>
@@ -566,7 +821,17 @@
       });
 
       rowsEl.appendChild(fragment);
-      totalEl.textContent = formatMoney(calculateTotal());
+      updateSummary();
+
+      if (activeRowId && activeField) {
+        const nextActive = rowsEl.querySelector(`tr[data-id="${CSS.escape(activeRowId)}"] input[data-field="${CSS.escape(activeField)}"]`);
+        if (nextActive) {
+          nextActive.focus({ preventScroll: true });
+          if (typeof activeSelectionStart === "number" && typeof activeSelectionEnd === "number") {
+            nextActive.setSelectionRange(activeSelectionStart, activeSelectionEnd);
+          }
+        }
+      }
     }
 
     function readLocalRows() {
@@ -579,9 +844,10 @@
       }
     }
 
-    function writeLocalRows() {
+    function writeLocalRows(statusText = "Сохранено на этом устройстве") {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
-      setStatus("Сохранено локально", "warn");
+      setStatus(statusText, "warn");
+      modeNoteEl.textContent = "Сейчас без общей синхронизации.";
     }
 
     function persistRows() {
@@ -590,16 +856,29 @@
         try {
           if (saveMode === "firebase" && firebaseSet && firebaseRef && remoteReady) {
             await firebaseSet(firebaseRef, rows);
-            setStatus("Синхронизировано", "ok");
+            setStatus("Общая таблица онлайн", "ok");
+            modeNoteEl.textContent = "Изменения видны всем участникам.";
           } else {
             writeLocalRows();
           }
         } catch (error) {
           console.error(error);
-          writeLocalRows();
-          setStatus("Firebase недоступен, сохранено локально", "err");
+          saveMode = "local";
+          writeLocalRows("Firebase недоступен");
+          setupHelpEl.hidden = false;
         }
-      }, 250);
+      }, 220);
+    }
+
+    function addRow() {
+      rows.push(normalizeRow({ product: "", qty: "", price: "" }));
+      render();
+      persistRows();
+      requestAnimationFrame(() => {
+        const lastInput = rowsEl.querySelector("tr:last-child input[data-field='product']");
+        lastInput?.focus();
+        lastInput?.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
     }
 
     rowsEl.addEventListener("input", (event) => {
@@ -611,27 +890,27 @@
       if (!row) return;
 
       const field = input.dataset.field;
-      row[field] = field === "price" ? input.value.replace(/[^0-9.,-]/g, "") : input.value;
-      totalEl.textContent = formatMoney(calculateTotal());
+      row[field] = field === "price" ? input.value.replace(/[^0-9.,\s-]/g, "") : input.value;
+      updateSummary();
       persistRows();
     });
 
     rowsEl.addEventListener("click", (event) => {
       const button = event.target.closest(".delete-row");
       if (!button) return;
+
       const tr = button.closest("tr[data-id]");
+      const row = rows.find((item) => item.id === tr.dataset.id);
+      const label = row?.product?.trim() || "эту строку";
+      if (!confirm(`Удалить «${label}»?`)) return;
+
       rows = rows.filter((item) => item.id !== tr.dataset.id);
       render();
       persistRows();
     });
 
-    addRowBtn.addEventListener("click", () => {
-      rows.push(normalizeRow({ product: "", qty: "", price: "" }));
-      render();
-      persistRows();
-      const lastInput = rowsEl.querySelector("tr:last-child input[data-field='product']");
-      lastInput?.focus();
-    });
+    addRowBtn.addEventListener("click", addRow);
+    addRowDockBtn.addEventListener("click", addRow);
 
     exportJsonBtn.addEventListener("click", () => {
       const blob = new Blob([JSON.stringify(rows, null, 2)], { type: "application/json;charset=utf-8" });
@@ -641,6 +920,13 @@
       a.download = "lake-trip-items.json";
       a.click();
       URL.revokeObjectURL(url);
+    });
+
+    resetRowsBtn.addEventListener("click", () => {
+      if (!confirm("Сбросить таблицу к стартовому списку? Текущие правки будут заменены.")) return;
+      rows = normalizeRows(initialRows);
+      render();
+      persistRows();
     });
 
     async function initFirebaseMode() {
@@ -659,22 +945,30 @@
       if (!snapshot.exists()) {
         rows = normalizeRows(initialRows);
         await firebaseSet(firebaseRef, rows);
+      } else {
+        rows = normalizeRows(snapshot.val());
+        render();
       }
 
-      databaseModule.onValue(firebaseRef, (snapshot) => {
+      unsubscribeFirebase = databaseModule.onValue(firebaseRef, (snapshot) => {
         remoteReady = true;
         const nextRows = normalizeRows(snapshot.val() || []);
         if (JSON.stringify(nextRows) !== JSON.stringify(rows)) {
           rows = nextRows;
           render();
         }
-        setStatus("Синхронизировано", "ok");
+        setupHelpEl.hidden = true;
+        setStatus("Общая таблица онлайн", "ok");
+        modeNoteEl.textContent = "Изменения видны всем участникам.";
       }, (error) => {
         console.error(error);
+        if (unsubscribeFirebase) unsubscribeFirebase();
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Ошибка Firebase, локальный режим", "err");
+        setupHelpEl.hidden = false;
+        setStatus("Нет доступа к Firebase", "err");
+        modeNoteEl.textContent = "Проверь Rules в Realtime Database.";
       });
     }
 
@@ -682,23 +976,29 @@
       rows = normalizeRows(initialRows);
       render();
 
-      if (!hasFirebaseConfig()) {
+      const missing = getMissingFirebaseFields();
+      if (missing.length) {
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Локальный режим", "warn");
+        setupHelpEl.hidden = false;
+        setStatus("Общий режим не настроен", "warn");
+        modeNoteEl.textContent = `Не хватает: ${missing.join(", ")}.`;
         return;
       }
 
       try {
-        setStatus("Подключение к Firebase…", "warn");
+        setStatus("Подключаю Firebase…", "warn");
+        modeNoteEl.textContent = "Подключаю общую таблицу…";
         await initFirebaseMode();
       } catch (error) {
         console.error(error);
         saveMode = "local";
         rows = readLocalRows();
         render();
-        setStatus("Firebase не подключился, локальный режим", "err");
+        setupHelpEl.hidden = false;
+        setStatus("Firebase не подключился", "err");
+        modeNoteEl.textContent = "Работает только на этом устройстве.";
       }
     }
 
